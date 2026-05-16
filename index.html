@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hacker Prank</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:black;
+    overflow:hidden;
+    color:#00ff00;
+}
+
+/* خلفية Matrix */
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1;
+}
+
+/* صندوق الاختراق */
+.hack-box{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:500px;
+    background:rgba(0,0,0,0.9);
+    border:2px solid #00ff00;
+    padding:30px;
+    text-align:center;
+    z-index:5;
+    box-shadow:0 0 25px #00ff00;
+    animation: shake 0.15s infinite;
+}
+
+@keyframes shake{
+    0%{transform:translate(-50%,-50%) translateX(0);}
+    25%{transform:translate(-50%,-50%) translateX(2px);}
+    50%{transform:translate(-50%,-50%) translateX(-2px);}
+    75%{transform:translate(-50%,-50%) translateY(2px);}
+    100%{transform:translate(-50%,-50%) translateY(-2px);}
+}
+
+.title{
+    font-size:35px;
+    margin-bottom:15px;
+    text-shadow:0 0 15px #00ff00;
+}
+
+.subtitle{
+    font-size:20px;
+    margin-bottom:20px;
+}
+
+.warning{
+    color:red;
+    font-size:22px;
+    margin-bottom:20px;
+    animation: blink 0.6s infinite;
+}
+
+@keyframes blink{
+    50%{
+        opacity:0;
+    }
+}
+
+.progress-container{
+    width:100%;
+    height:35px;
+    border:2px solid #00ff00;
+    overflow:hidden;
+    margin-top:15px;
+}
+
+.progress{
+    width:0%;
+    height:100%;
+    background:#00ff00;
+    box-shadow:0 0 20px #00ff00;
+    animation: loading 12s linear forwards;
+}
+
+@keyframes loading{
+    from{
+        width:0%;
+    }
+    to{
+        width:100%;
+    }
+}
+
+.percent{
+    margin-top:15px;
+    font-size:28px;
+}
+
+.countdown{
+    margin-top:15px;
+    color:red;
+    font-size:28px;
+}
+
+.camera{
+    margin-top:20px;
+    border:2px solid red;
+    padding:10px;
+    color:red;
+    animation: blink 0.7s infinite;
+}
+
+/* شاشة المقلب */
+.prank{
+    display:none;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    z-index:10;
+    text-align:center;
+    color:#00ff00;
+}
+
+.prank h1{
+    font-size:70px;
+    text-shadow:0 0 20px #00ff00;
+}
+
+.prank p{
+    font-size:30px;
+    margin-top:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="hack-box" id="hackBox">
+
+    <div class="title">⚠ جاري اختراق جهازك ⚠</div>
+
+    <div class="subtitle">
+        HACKING YOUR DEVICE...
+    </div>
+
+    <div class="warning">
+        تم الوصول إلى ملفاتك الخاصة
+    </div>
+
+    <div class="progress-container">
+        <div class="progress"></div>
+    </div>
+
+    <div class="percent" id="percent">0%</div>
+
+    <div class="countdown">
+        حذف الملفات خلال:
+        <span id="timer">12</span>
+    </div>
+
+    <div class="camera">
+        📷 CAMERA ACCESS GRANTED
+    </div>
+
+</div>
+
+<div class="prank" id="prank">
+    <h1>😂 مقلب يا عبيط 😂</h1>
+    <p>اتخضيت صح؟ 😎</p>
+</div>
+
+<script>
+
+/* Matrix Effect */
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+const letters = "10101010101010101010";
+const fontSize = 16;
+const columns = canvas.width / fontSize;
+
+const drops = [];
+
+for(let x = 0; x < columns; x++){
+    drops[x] = 1;
+}
+
+function draw(){
+    ctx.fillStyle = "rgba(0,0,0,0.05)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle = "#00ff00";
+    ctx.font = fontSize + "px monospace";
+
+    for(let i = 0; i < drops.length; i++){
+        const text = letters.charAt(
+            Math.floor(Math.random() * letters.length)
+        );
+
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if(drops[i] * fontSize > canvas.height && Math.random() > 0.975){
+            drops[i] = 0;
+        }
+
+        drops[i]++;
+    }
+}
+
+setInterval(draw, 33);
+
+/* النسبة والعداد */
+let percent = 0;
+let time = 12;
+
+const percentText = document.getElementById("percent");
+const timerText = document.getElementById("timer");
+
+const interval = setInterval(() => {
+
+    percent += Math.floor(Math.random() * 12);
+
+    if(percent > 100){
+        percent = 100;
+    }
+
+    percentText.innerText = percent + "%";
+
+    time--;
+    timerText.innerText = time;
+
+},1000);
+
+/* صوت إنذار */
+const audio = new Audio(
+'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg'
+);
+
+audio.loop = true;
+
+setTimeout(() => {
+    audio.play().catch(()=>{});
+},1000);
+
+/* نهاية المقلب */
+setTimeout(() => {
+
+    clearInterval(interval);
+
+    document.getElementById("hackBox").style.display = "none";
+
+    document.getElementById("prank").style.display = "block";
+
+    audio.pause();
+
+    document.body.style.background = "black";
+
+},12000);
+
+</script>
+
+</body>
+      </html>
